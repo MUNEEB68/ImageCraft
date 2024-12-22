@@ -94,6 +94,54 @@
      <enum>Qt::Orientation::Vertical</enum>
     </property>
    </widget>
+   <widget class="QPushButton" name="Filter_button">
+    <property name="geometry">
+     <rect>
+      <x>4</x>
+      <y>383</y>
+      <width>151</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FILTER</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Brightness_button">
+    <property name="geometry">
+     <rect>
+      <x>154</x>
+      <y>383</y>
+      <width>111</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Brightness</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="Brightness_Slider">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>370</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-150</number>
+    </property>
+    <property name="maximum">
+     <number>150</number>
+    </property>
+    <property name="sliderPosition">
+     <number>0</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Orientation::Horizontal</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
