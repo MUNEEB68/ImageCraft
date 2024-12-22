@@ -21,5 +21,8 @@ private slots:
     void on_resize_clicked();
     void on_cropScrollBar_valueChanged(int value); // Ensure this declaration matches the definition
     // void updateDisplayedImage(const cv::Mat& image);
+	void on_Filter_button_clicked();
+	void on_Brightness_button_clicked();
+	void on_brightnessSlider_valueChanged(int value);
 };
 
