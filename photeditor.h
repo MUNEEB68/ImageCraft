@@ -26,3 +26,4 @@ private slots:
 	void on_brightnessSlider_valueChanged(int value);
 };
 
+
