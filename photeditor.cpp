@@ -15,8 +15,10 @@
 
 using namespace std;
 using namespace cv;
+//gloa
 Mat universal_image_for_resize;
 Mat universal_image_for_brightness;
+Mat universal_image_for_contrast;
  int current_image_width = 0;
  int current_image_height = 0;
 // Image Class Definition
@@ -236,7 +238,6 @@ void photeditor::on_upload_clicked() {
 void photeditor::on_resize_clicked() {
     if (Imag1.isImageLoaded()) {
         ui.VERTICALSCROLLBAR->setVisible(true);
-
         ui.Brightness_Slider->setVisible(false);
        
         universal_image_for_resize = universal_image;
