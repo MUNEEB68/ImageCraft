@@ -58,6 +58,21 @@ public:
             return return_image;
         }
     }
+    Mat contrast_adjustment(Mat& img, int value) {
+        if (img.empty()) {
+            throw std::runtime_error("Image is empty, cannot adjust contrast.");
+        }
+        else {
+            Mat return_image;
+
+            // Map slider value (-100 to 100) to a contrast scaling factor (e.g., 0.5 to 2.0)
+            double alpha = 1 + (value / 100.0);
+
+            // Adjust contrast by scaling pixel values
+            img.convertTo(return_image, -1, alpha, 0); // alpha is the contrast scaling factor, 0 is the brightness offset
+            return return_image;
+        }
+    }
 };
 
 class Image_operations {
@@ -72,6 +87,7 @@ public:
         resize(img, resizedImg, Size(), scale, scale);
         return resizedImg;
     }
+   
 };
 
 // Global Image Object
@@ -87,6 +103,11 @@ photeditor::photeditor(QWidget* parent) : QMainWindow(parent) {
     ui.VERTICALSCROLLBAR->setVisible(false);
 	ui.Brightness_button->setVisible(false);
 	ui.Brightness_Slider->setVisible(false);
+    ui.contrast_slider->setVisible(false);
+    ui.contrast_button->setVisible(false);
+    connect(ui.contrast_slider, &QScrollBar::valueChanged, this, &photeditor::on_contrast_Slider_valueChanged);
+
+
     connect(ui.VERTICALSCROLLBAR, &QScrollBar::valueChanged, this,
         &photeditor::on_cropScrollBar_valueChanged);
     connect(ui.Brightness_Slider, &QScrollBar::valueChanged, this, &photeditor::on_brightnessSlider_valueChanged);
@@ -96,6 +117,41 @@ photeditor::photeditor(QWidget* parent) : QMainWindow(parent) {
 
 // Destructor
 photeditor::~photeditor() {}
+
+void photeditor::on_contrast_Slider_valueChanged(int value) {
+    try {
+        Image_Filters obj2;
+        Mat contrast_image;
+
+        contrast_image = obj2.contrast_adjustment(universal_image_for_contrast, value);
+        // Convert the contrast cv::Mat to QImage
+        QImage contrastedQImage((const uchar*)contrast_image.data,contrast_image.cols,
+            contrast_image.rows, contrast_image.step, QImage::Format_BGR888);
+
+        // Display the brightened image in the QLabel
+        universal_image = contrast_image;
+        ui.uploaded_pic->setPixmap(
+            QPixmap::fromImage(contrastedQImage).scaled(current_image_width, current_image_height, Qt::KeepAspectRatio));
+
+        // Optional: Log brightness value to a file
+        ofstream outFile("brightness.txt", ios::app);
+        if (outFile.is_open()) {
+            outFile << "contrast value: " << value << endl;
+            outFile.close();
+        }
+        else {
+            cout << "Error: Could not open the brightness log file." << endl;
+        }
+    }
+    catch (const std::exception& e) {
+        QMessageBox::warning(this, tr("Error"), tr(e.what()));
+    }
+
+}
+
+    
+
+
 
 void photeditor::on_brightnessSlider_valueChanged(int value) {
     try {
@@ -257,6 +313,7 @@ void photeditor::on_Filter_button_clicked() {
 
     ui.VERTICALSCROLLBAR->setVisible(false);
     ui.Brightness_button->setVisible(true);
+    ui.contrast_button->setVisible(true);
    // QMessageBox::warning(this, tr("Error"), tr("button clicked"));
 
     if (Imag1.isImageLoaded()) {
@@ -277,11 +334,24 @@ void photeditor::on_Brightness_button_clicked() {
 		cout << "Brightness button clicked. Showing brightness slider." << endl;
         ui.Brightness_Slider->setVisible(true);
         ui.VERTICALSCROLLBAR->setVisible(false);
+        ui.contrast_slider->setVisible(false);
 		universal_image_for_brightness = universal_image;
 
 	}
 	else {
 		QMessageBox::warning(this, tr("Error"), tr("No image loaded. Please upload an image first."));
-	}
-   
+	}}
+void photeditor::on_contrast_button_clicked() {
+    if (Imag1.isImageLoaded()) {
+      //  cout << "Brightness button clicked. Showing brightness slider." << endl;
+        ui.Brightness_Slider->setVisible(false);
+        ui.VERTICALSCROLLBAR->setVisible(false);
+        ui.contrast_slider->setVisible(true);
+        universal_image_for_contrast = universal_image;
+
+    }
+    else {
+        QMessageBox::warning(this, tr("Error"), tr("No image loaded. Please upload an image first."));
+    }
 }
+
