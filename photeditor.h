@@ -24,6 +24,7 @@ private slots:
 	void on_Filter_button_clicked();
 	void on_Brightness_button_clicked();
 	void on_brightnessSlider_valueChanged(int value);
+    void on_contrast_button_clicked();
+    void on_contrast_Slider_valueChanged(int value);
 };
-
 
